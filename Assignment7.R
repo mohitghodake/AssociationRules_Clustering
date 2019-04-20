@@ -27,6 +27,7 @@ df$AMOUNT_REQUESTED <- as.numeric(gsub(",","",df$AMOUNT_REQUESTED))
 df$CREDIT_EXTENDED <- NULL
 df$`OBS#` <- NULL
 
+##
 #1
 #Creating Dummy Varaibles
 df$CHK0 <- factor(ifelse(df$CHK_ACCT == 0, 1, 0))
@@ -102,6 +103,8 @@ df <- fread("Credit.csv")
 df$AMOUNT_REQUESTED <- as.numeric(gsub(",","",df$AMOUNT_REQUESTED))
 df$CREDIT_EXTENDED <- NULL
 df$`OBS#` <- NULL
+df$PROFITABLE <- ifelse(df$NPV > 0, 1, 0)
+df$PROFITABLE <- factor(df$PROFITABLE)
 
 #Creating Dummy Varaibles
 df$CHK0 <- factor(ifelse(df$CHK_ACCT == 0, 1, 0))
@@ -121,31 +124,51 @@ df$HISTORY2 <- factor(ifelse(df$HISTORY == 2, 1, 0))
 df$HISTORY3 <- factor(ifelse(df$HISTORY == 3, 1, 0))
 df$HISTORY4 <- factor(ifelse(df$HISTORY == 4, 1, 0))
 
+df$EMPLOYMENT0 <- factor(ifelse(df$EMPLOYMENT == 0, 1, 0))
+df$EMPLOYMENT1 <- factor(ifelse(df$EMPLOYMENT == 1, 1, 0))
+df$EMPLOYMENT2 <- factor(ifelse(df$EMPLOYMENT == 2, 1, 0))
+df$EMPLOYMENT3 <- factor(ifelse(df$EMPLOYMENT == 3, 1, 0))
+df$EMPLOYMENT4 <- factor(ifelse(df$EMPLOYMENT == 4, 1, 0))
+
+df$OWN_RES <- factor(df$OWN_RES)
+
 df$JOB0 <- factor(ifelse(df$JOB == 0, 1, 0))
 df$JOB1 <- factor(ifelse(df$JOB == 1, 1, 0))
 df$JOB2 <- factor(ifelse(df$JOB == 2, 1, 0))
 df$JOB3 <- factor(ifelse(df$JOB == 3, 1, 0))
 
-df$TYPE0 <- factor(ifelse(df$TYPE == 0, 1, 0))
-df$TYPE1 <- factor(ifelse(df$TYPE == 1, 1, 0))
-df$TYPE2 <- factor(ifelse(df$TYPE == 2, 1, 0))
-df$TYPE3 <- factor(ifelse(df$TYPE == 3, 1, 0))
-df$TYPE4 <- factor(ifelse(df$TYPE == 4, 1, 0))
-df$TYPE5 <- factor(ifelse(df$TYPE == 5, 1, 0))
-df$TYPE6 <- factor(ifelse(df$TYPE == 6, 1, 0))
-
 df$CHK_ACCT <- NULL
 df$SAV_ACCT <- NULL
 df$HISTORY <- NULL
+df$EMPLOYMENT <- NULL
 df$JOB <- NULL
-df$TYPE <- NULL
-df <- df[, -(1:16)]
+df$NPV <- NULL
+
+df <- df[, -(1:9)]
+df <- df[, -(2:6)]
 
 set.seed(12345)
 
-# Visualize the items inside the data
-itemFrequencyPlot(df, topN = 15, type = "relative")
+rules <- apriori(df, parameter = list(supp = 0.1, conf = 0.8), 
+                 appearance = list(rhs = "PROFITABLE=1"))
 
-rules <- apriori(df, parameter = list(supp = 0.1, conf = 0.8))
+rules <- sort(rules, decreasing = TRUE, by = "lift")
+inspect(rules[1:20])
+
+##
+#9
+totalProfit = 0
+
+df_new <- fread("Credit.csv")
+
+for (i in 1:nrow(df_new)) {
+  if(df[i]$CHK3 == 1 & df[i]$SAV1 == 0 & df[i]$HISTORY3 == 0 & df[i]$EMPLOYMENT0 == 0 & df[i]$EMPLOYMENT1 == 0 & df[i]$EMPLOYMENT2 == 0 & df[i]$JOB2 == 1)
+    totalProfit = totalProfit + df_new[i]$NPV
+}
+
+totalProfit
+
+avgProfit <- totalProfit/nrow(df_new)
+avgProfit
 
 
