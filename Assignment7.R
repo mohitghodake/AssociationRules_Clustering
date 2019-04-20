@@ -62,15 +62,29 @@ df$TYPE6 <- factor(ifelse(df$TYPE == 6, 1, 0))
 set.seed(12345)
 df$PROFITABLE <- ifelse(df$NPV > 0, 1, 0)
 df$PROFITABLE <- factor(df$PROFITABLE)
-df1 <- df[,-21]
+df1 <- df[, -21]
+df1 <- df1[, -46]
+df1 <- scale(df1)
 
 kmeansCluster = kmeans(df1, 5, nstart=20)
 kmeansCluster
 dist(kmeansCluster$centers)
-table(df$NPV,df$Cluster)
+
 
 ##
 #4
+newdf <- data.frame(df$NPV, kmeansCluster$cluster)
 
+
+
+##
+#6
+kmeansCluster_4 = kmeans(df1, 4, nstart=20)
+kmeansCluster_4
+dist(kmeansCluster_4$centers)
+
+kmeansCluster_6 = kmeans(df1, 9, nstart=20)
+kmeansCluster_6
+dist(kmeansCluster_6$centers)
 
 
