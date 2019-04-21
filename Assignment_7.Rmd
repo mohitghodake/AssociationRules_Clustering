@@ -100,11 +100,11 @@ dist(kmeansCluster$centers)
 ########################
 #4
 newdf <- data.frame(df$NPV, kmeansCluster$cluster)
-cluster1_count = 0
-cluster2_count = 0
-cluster3_count = 0
-cluster4_count = 0
-cluster5_count = 0
+cluster1_count = kmeansCluster$size[1]
+cluster2_count = kmeansCluster$size[2]
+cluster3_count = kmeansCluster$size[3]
+cluster4_count = kmeansCluster$size[4]
+cluster5_count = kmeansCluster$size[5]
 
 profitable_cluster1_count = 0
 profitable_cluster2_count = 0
@@ -121,23 +121,18 @@ NPV_5 = 0
 
 for (i in 1:nrow(newdf)){
   if (newdf[i, 2] == 1){ 
-    cluster1_count = cluster1_count + 1
     NPV_1 = NPV_1 + newdf[i, 1]
   }
   if (newdf[i, 2] == 2){ 
-    cluster2_count = cluster2_count + 1
     NPV_2 = NPV_2 + newdf[i, 1]
   }
-  if (newdf[i, 2] == 3){ 
-    cluster3_count = cluster3_count + 1
+  if (newdf[i, 2] == 3){
     NPV_3 = NPV_3 + newdf[i, 1]
   }
   if (newdf[i, 2] == 4){ 
-    cluster4_count = cluster4_count + 1
     NPV_4 = NPV_4 + newdf[i, 1]
   }
   if (newdf[i, 2] == 5){ 
-    cluster5_count = cluster5_count + 1
     NPV_5 = NPV_5 + newdf[i, 1]
   }
 }
@@ -232,10 +227,10 @@ kmeansCluster_4
 dist(kmeansCluster_4$centers)
 
 newdf_1 <- data.frame(df$NPV, kmeansCluster_4$cluster)
-cluster1_count = 0
-cluster2_count = 0
-cluster3_count = 0
-cluster4_count = 0
+cluster1_count = kmeansCluster_4$size[1]
+cluster2_count = kmeansCluster_4$size[2]
+cluster3_count = kmeansCluster_4$size[3]
+cluster4_count = kmeansCluster_4$size[4]
 
 profitable_cluster1_count = 0
 profitable_cluster2_count = 0
@@ -250,19 +245,15 @@ NPV_4 = 0
 
 for (i in 1:nrow(newdf_1)){
   if (newdf_1[i, 2] == 1){ 
-    cluster1_count = cluster1_count + 1
     NPV_1 = NPV_1 + newdf_1[i, 1]
   }
   if (newdf_1[i, 2] == 2){ 
-    cluster2_count = cluster2_count + 1
     NPV_2 = NPV_2 + newdf_1[i, 1]
   }
   if (newdf_1[i, 2] == 3){ 
-    cluster3_count = cluster3_count + 1
     NPV_3 = NPV_3 + newdf_1[i, 1]
   }
   if (newdf_1[i, 2] == 4){ 
-    cluster4_count = cluster4_count + 1
     NPV_4 = NPV_4 + newdf_1[i, 1]
   }
 }
@@ -342,12 +333,12 @@ dist(kmeansCluster_6$centers)
 
 
 newdf_2 <- data.frame(df$NPV, kmeansCluster_6$cluster)
-cluster1_count = 0
-cluster2_count = 0
-cluster3_count = 0
-cluster4_count = 0
-cluster5_count = 0
-cluster6_count = 0
+cluster1_count = kmeansCluster_6$size[1]
+cluster2_count = kmeansCluster_6$size[2]
+cluster3_count = kmeansCluster_6$size[3]
+cluster4_count = kmeansCluster_6$size[4]
+cluster5_count = kmeansCluster_6$size[5]
+cluster6_count = kmeansCluster_6$size[6]
 
 profitable_cluster1_count = 0
 profitable_cluster2_count = 0
@@ -366,27 +357,21 @@ NPV_6 = 0
 
 for (i in 1:nrow(newdf_2)){
   if (newdf_2[i, 2] == 1){ 
-    cluster1_count = cluster1_count + 1
     NPV_1 = NPV_1 + newdf_2[i, 1]
   }
   if (newdf_2[i, 2] == 2){ 
-    cluster2_count = cluster2_count + 1
     NPV_2 = NPV_2 + newdf_2[i, 1]
   }
   if (newdf_2[i, 2] == 3){ 
-    cluster3_count = cluster3_count + 1
     NPV_3 = NPV_3 + newdf_2[i, 1]
   }
   if (newdf_2[i, 2] == 4){ 
-    cluster4_count = cluster4_count + 1
     NPV_4 = NPV_4 + newdf_2[i, 1]
   }
   if (newdf_2[i, 2] == 5){ 
-    cluster5_count = cluster5_count + 1
     NPV_5 = NPV_5 + newdf_2[i, 1]
   }
   if (newdf_2[i, 2] == 6){ 
-    cluster6_count = cluster6_count + 1
     NPV_6 = NPV_6 + newdf_2[i, 1]
   }
 }
