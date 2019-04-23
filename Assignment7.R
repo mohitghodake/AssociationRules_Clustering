@@ -20,6 +20,9 @@ library(ISLR)
 library(data.table)
 library(arules)
 library(arulesViz)
+library(cluster)
+library(factoextra)
+library(readr)
 
 df <- fread("Credit.csv")
 
@@ -73,12 +76,12 @@ df$PROFITABLE <- ifelse(df$NPV > 0, 1, 0)
 df$PROFITABLE <- factor(df$PROFITABLE)
 df1 <- df[, -16]
 df1 <- df1[, -41]
-#df1 <- scale(df1)
 
 kmeansCluster = kmeans(df1, 5, nstart=20)
 kmeansCluster
 dist(kmeansCluster$centers)
-
+df$cluster <- kmeansCluster$cluster
+table(df$PROFITABLE, df$cluster)
 
 ########################
 #4
@@ -518,4 +521,47 @@ totalProfit
 avgProfit <- totalProfit/nrow(df_new)
 avgProfit
 
+
+
+###########################
+#10
+credit <- read_csv("Credit.csv")
+credit$PROFITABLE <- as.factor(ifelse(credit$NPV>0,1,0))
+
+set.seed(12345)
+km.out <- kmeans(credit[-16:-17], 5, nstart=20)
+
+
+credit$CLUSTER <- km.out$cluster
+
+credit.sub <- subset(credit, select = c("PROFITABLE","CLUSTER"))
+
+credit.sub$CLUSTER_1 <- ifelse(credit.sub$CLUSTER != 1, 0, 1)
+credit.sub$CLUSTER_2 <- ifelse(credit.sub$CLUSTER != 2, 0, 1)
+credit.sub$CLUSTER_3 <- ifelse(credit.sub$CLUSTER != 3, 0, 1)
+credit.sub$CLUSTER_4 <- ifelse(credit.sub$CLUSTER != 4, 0, 1)
+credit.sub$CLUSTER_5 <- ifelse(credit.sub$CLUSTER != 5, 0, 1)
+credit.sub$CLUSTER <- NULL
+
+credit.sub[] <- lapply(credit.sub, factor)
+col_names <- names(credit.sub)
+
+set.seed(12345)
+rules<-apriori(data=credit.sub, parameter=list(supp=0.01, conf=0.08), 
+               appearance = list(default="lhs",rhs="PROFITABLE=1"),
+               control = list(verbose=F))
+
+
+rules<-sort(rules, decreasing=TRUE,by="lift")
+inspect(rules[1:20])
+
+topRule <- subset(credit, CLUSTER == 1)
+
+
+totalProfits <- sum(topRule$NPV)
+
+averageProfits <- mean(topRule$NPV)
+
+print(paste0("Total Profit: ", totalProfits))
+print(paste0("Average Profit: ", averageProfits))
 
